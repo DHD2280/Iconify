@@ -5,11 +5,13 @@ import com.drdisagree.iconify.common.Const.PIXEL_LAUNCHER_PACKAGE
 import com.drdisagree.iconify.common.Const.SYSTEMUI_PACKAGE
 import com.drdisagree.iconify.xposed.modules.BackgroundChip
 import com.drdisagree.iconify.xposed.modules.BatteryStyleManager
+import com.drdisagree.iconify.xposed.modules.ControllersProvider
 import com.drdisagree.iconify.xposed.modules.DepthWallpaper
 import com.drdisagree.iconify.xposed.modules.HeaderClock
 import com.drdisagree.iconify.xposed.modules.HeaderImage
 import com.drdisagree.iconify.xposed.modules.IconUpdater
 import com.drdisagree.iconify.xposed.modules.LockscreenClock
+import com.drdisagree.iconify.xposed.modules.LockscreenWidgets
 import com.drdisagree.iconify.xposed.modules.Miscellaneous
 import com.drdisagree.iconify.xposed.modules.QSTransparency
 import com.drdisagree.iconify.xposed.modules.QuickSettings
@@ -32,11 +34,13 @@ object EntryList {
     )
 
     private val systemUICommonModPacks = listOf(
+        ControllersProvider::class.java,
         BackgroundChip::class.java,
         HeaderClock::class.java,
         HeaderImage::class.java,
         DepthWallpaper::class.java,
         LockscreenClock::class.java,
+        LockscreenWidgets::class.java,
         Miscellaneous::class.java,
         QSTransparency::class.java,
         QuickSettings::class.java,

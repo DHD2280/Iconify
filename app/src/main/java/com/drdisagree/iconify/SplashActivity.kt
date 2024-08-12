@@ -41,19 +41,20 @@ class SplashActivity : AppCompatActivity() {
             val isModuleProperlyInstalled = isModuleInstalled &&
                     (isOverlayInstalled || isXposedOnlyMode)
 
-            val intent: Intent =
-                if (SKIP_TO_HOMEPAGE_FOR_TESTING ||
-                    isRooted &&
-                    isModuleProperlyInstalled &&
-                    isVersionCodeCorrect
-                ) {
-                    keepShowing = false
-                    Intent(this@SplashActivity, MainActivity::class.java)
-                } else {
-                    keepShowing = false
-                    Intent(this@SplashActivity, OnboardingActivity::class.java)
-                }
-
+//            val intent: Intent =
+//                if (true ||
+//                    isRooted &&
+//                    isModuleProperlyInstalled &&
+//                    isVersionCodeCorrect
+//                ) {
+//                    keepShowing = false
+//                    Intent(this@SplashActivity, MainActivity::class.java)
+//                } else {
+//                    keepShowing = false
+//                    Intent(this@SplashActivity, OnboardingActivity::class.java)
+//                }
+            keepShowing = false
+            val intent: Intent = Intent(this@SplashActivity, MainActivity::class.java)
             startActivity(intent)
             finish()
         }
@@ -68,7 +69,7 @@ class SplashActivity : AppCompatActivity() {
     }
 
     companion object {
-        private const val SKIP_INSTALLATION = false
+        private const val SKIP_INSTALLATION = true
         val SKIP_TO_HOMEPAGE_FOR_TESTING = SKIP_INSTALLATION && BuildConfig.DEBUG
 
         init {
