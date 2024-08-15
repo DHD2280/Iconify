@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipChildren="false"
+    tools:context=".ui.fragments.XposedLockscreenWidgets">
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/nested_scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:orientation="vertical"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:animateLayoutChanges="true"
+            android:orientation="vertical">
+
+            <com.drdisagree.iconify.ui.widgets.SwitchWidget
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/lockscreen_widgets_switch"
+                app:titleText="@string/lockscreen_widgets_enabled_title"
+                app:summaryText="@string/lockscreen_widgets_enabled_summary" />
+
+            <com.drdisagree.iconify.ui.widgets.SwitchWidget
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/device_widget"
+                app:titleText="@string/lockscreen_display_widgets_title"
+                app:summaryText="@string/lockscreen_display_widgets_summary" />
+
+            <com.drdisagree.iconify.ui.widgets.RadioDialogWidget
+                android:id="@+id/big_widget_1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:titleText="@string/main_custom_widgets1"
+                app:entries="@array/lockscreen_widgets_entries" />
+
+            <com.drdisagree.iconify.ui.widgets.RadioDialogWidget
+                android:id="@+id/big_widget_2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:titleText="@string/main_custom_widgets2"
+                app:entries="@array/lockscreen_widgets_entries" />
+
+            <com.drdisagree.iconify.ui.widgets.RadioDialogWidget
+                android:id="@+id/mini_widget_1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:titleText="@string/custom_widgets1"
+                app:entries="@array/lockscreen_widgets_entries" />
+
+            <com.drdisagree.iconify.ui.widgets.RadioDialogWidget
+                android:id="@+id/mini_widget_2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:titleText="@string/custom_widgets2"
+                app:entries="@array/lockscreen_widgets_entries" />
+
+            <com.drdisagree.iconify.ui.widgets.RadioDialogWidget
+                android:id="@+id/mini_widget_3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:titleText="@string/custom_widgets3"
+                app:entries="@array/lockscreen_widgets_entries" />
+
+            <com.drdisagree.iconify.ui.widgets.RadioDialogWidget
+                android:id="@+id/mini_widget_4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:titleText="@string/custom_widgets4"
+                app:entries="@array/lockscreen_widgets_entries" />
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <include
+        android:id="@+id/header"
+        layout="@layout/view_header" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
