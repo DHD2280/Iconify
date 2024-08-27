@@ -420,21 +420,6 @@ object PrefsHelper {
         }
 
         return when (key) {
-            APP_LANGUAGE -> {
-                val currentLanguageCode =
-                    listOf<String?>(*fragmentCompat.resources.getStringArray(R.array.locale_code))
-                        .indexOf(
-                            getString(
-                                APP_LANGUAGE,
-                                fragmentCompat.resources.configuration.locales[0].language
-                            )
-                        )
-                val selectedLanguageCode = if (currentLanguageCode < 0) listOf<String>(
-                    *fragmentCompat.resources.getStringArray(R.array.locale_code)
-                ).indexOf("en-US") else currentLanguageCode
-
-                return listOf<String>(*fragmentCompat.resources.getStringArray(R.array.locale_name))[selectedLanguageCode]
-            }
 
             "checkForUpdatePref" -> BuildConfig.VERSION_NAME
 
