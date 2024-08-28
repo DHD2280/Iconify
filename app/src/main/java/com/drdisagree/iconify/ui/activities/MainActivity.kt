@@ -44,9 +44,10 @@ import com.drdisagree.iconify.ui.preferences.preferencesearch.SearchPreferenceFr
 import com.drdisagree.iconify.ui.preferences.preferencesearch.SearchPreferenceResult
 import com.drdisagree.iconify.ui.preferences.preferencesearch.SearchPreferenceResultListener
 import com.drdisagree.iconify.ui.utils.FragmentHelper.isInGroup
-import com.drdisagree.iconify.utils.SystemUtil
-import com.drdisagree.iconify.utils.overlay.FabricatedUtil
-import com.drdisagree.iconify.utils.overlay.OverlayUtil
+import com.drdisagree.iconify.utils.HapticUtils.weakVibrate
+import com.drdisagree.iconify.utils.SystemUtils
+import com.drdisagree.iconify.utils.overlay.FabricatedUtils
+import com.drdisagree.iconify.utils.overlay.OverlayUtils
 import com.jaredrummler.android.colorpicker.ColorPickerDialog
 import com.jaredrummler.android.colorpicker.ColorPickerDialogListener
 import kotlinx.coroutines.CoroutineScope
@@ -90,12 +91,12 @@ class MainActivity : BaseActivity(),
             LottieCompositionFactory.clearCache(this@MainActivity)
 
             // Get list of enabled overlays
-            val enabledOverlays = OverlayUtil.enabledOverlayList
+            val enabledOverlays = OverlayUtils.enabledOverlayList
             enabledOverlays.forEach { overlay ->
                 RPrefs.putBoolean(overlay, true)
             }
 
-            val fabricatedEnabledOverlays = FabricatedUtil.enabledOverlayList
+            val fabricatedEnabledOverlays = FabricatedUtils.enabledOverlayList
             fabricatedEnabledOverlays.forEach { overlay ->
                 if (!RPrefs.getBoolean("fabricated$overlay", false)) {
                     RPrefs.putBoolean("fabricated$overlay", true)
@@ -122,6 +123,7 @@ class MainActivity : BaseActivity(),
         )
 
         binding.pendingActions.setOnClickListener {
+            binding.pendingActions.weakVibrate()
             showOrHideFabButtons()
         }
 
@@ -146,7 +148,7 @@ class MainActivity : BaseActivity(),
             )
 
             Handler(Looper.getMainLooper()).postDelayed({
-                SystemUtil.restartSystemUI()
+                SystemUtils.restartSystemUI()
             }, 500)
         }
 
@@ -160,7 +162,7 @@ class MainActivity : BaseActivity(),
             )
 
             Handler(Looper.getMainLooper()).postDelayed({
-                SystemUtil.restartDevice()
+                SystemUtils.restartDevice()
             }, android.R.integer.config_longAnimTime.toLong())
         }
     }
@@ -192,22 +194,18 @@ class MainActivity : BaseActivity(),
 
             when {
                 isInGroup(fragment, homeIndex) && !xposedOnlyMode -> {
-                    selectedFragment = R.id.homePage
                     binding.bottomNavigationView.menu.getItem(homeIndex).setChecked(true)
                 }
 
                 isInGroup(fragment, tweaksIndex) && !xposedOnlyMode -> {
-                    selectedFragment = R.id.tweaks
                     binding.bottomNavigationView.menu.getItem(tweaksIndex).setChecked(true)
                 }
 
                 isInGroup(fragment, xposedIndex) -> {
-                    selectedFragment = R.id.xposed
                     binding.bottomNavigationView.menu.getItem(xposedIndex).setChecked(true)
                 }
 
                 isInGroup(fragment, settingsIndex) -> {
-                    selectedFragment = R.id.settings
                     binding.bottomNavigationView.menu.getItem(settingsIndex).setChecked(true)
                 }
             }
@@ -219,38 +217,38 @@ class MainActivity : BaseActivity(),
             when (item.itemId) {
                 R.id.homePage -> {
                     if (fragmentTag != Home::class.java.simpleName) {
-                        selectedFragment = R.id.homePage
                         replaceFragment(Home())
+                        binding.bottomNavigationView.weakVibrate()
                     }
                     return@setOnItemSelectedListener true
                 }
 
                 R.id.tweaks -> {
                     if (fragmentTag != Tweaks::class.java.simpleName) {
-                        selectedFragment = R.id.tweaks
                         replaceFragment(Tweaks())
+                        binding.bottomNavigationView.weakVibrate()
                     }
                     return@setOnItemSelectedListener true
                 }
 
                 R.id.xposed -> {
                     if (fragmentTag != Xposed::class.java.simpleName) {
-                        selectedFragment = R.id.xposed
                         replaceFragment(Xposed())
+                        binding.bottomNavigationView.weakVibrate()
                     }
                     return@setOnItemSelectedListener true
                 }
 
                 R.id.settings -> {
                     if (fragmentTag != Settings::class.java.simpleName) {
-                        selectedFragment = R.id.settings
                         replaceFragment(Settings())
+                        binding.bottomNavigationView.weakVibrate()
                     }
                     return@setOnItemSelectedListener true
                 }
 
                 else -> {
-                    return@setOnItemSelectedListener true
+                    return@setOnItemSelectedListener false
                 }
             }
         }
@@ -396,26 +394,6 @@ class MainActivity : BaseActivity(),
         colorPickerDialog.show(this)
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        if (selectedFragment != null) {
-            outState.putInt(SELECTED_FRAGMENT_KEY, selectedFragment!!)
-        }
-
-        outState.putBoolean(REQUIRE_SYSTEMUI_RESTART_KEY, Dynamic.requiresSystemUiRestart)
-        outState.putBoolean(REQUIRE_DEVICE_RESTART_KEY, Dynamic.requiresDeviceRestart)
-
-        super.onSaveInstanceState(outState)
-    }
-
-    public override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        selectedFragment = savedInstanceState.getInt(SELECTED_FRAGMENT_KEY)
-        Dynamic.requiresSystemUiRestart =
-            savedInstanceState.getBoolean(REQUIRE_SYSTEMUI_RESTART_KEY)
-        Dynamic.requiresDeviceRestart = savedInstanceState.getBoolean(REQUIRE_DEVICE_RESTART_KEY)
-
-        super.onRestoreInstanceState(savedInstanceState)
-    }
-
     override fun onColorSelected(dialogId: Int, color: Int) {
         EventBus.getDefault().post(ColorSelectedEvent(dialogId, color))
     }
@@ -462,12 +440,8 @@ class MainActivity : BaseActivity(),
     }
 
     companion object {
-        private const val SELECTED_FRAGMENT_KEY = "mSelectedFragmentKey"
-        private const val REQUIRE_SYSTEMUI_RESTART_KEY = "mSystemUiRestartKey"
-        private const val REQUIRE_DEVICE_RESTART_KEY = "mDeviceRestartKey"
         private lateinit var myFragmentManager: FragmentManager
         private var myActionBar: ActionBar? = null
-        private var selectedFragment: Int? = null
         private lateinit var colorPickerDialog: ColorPickerDialog.Builder
 
         fun replaceFragment(fragment: Fragment) {

@@ -8,10 +8,10 @@ import androidx.core.graphics.ColorUtils
 import com.drdisagree.iconify.common.Const.SYSTEMUI_PACKAGE
 import com.drdisagree.iconify.common.Preferences.DUALTONE_QSPANEL
 import com.drdisagree.iconify.common.Preferences.LIGHT_QSPANEL
-import com.drdisagree.iconify.xposed.HookEntry.Companion.disableOverlays
+import com.drdisagree.iconify.xposed.HookEntry.Companion.disableOverlay
 import com.drdisagree.iconify.xposed.HookEntry.Companion.enableOverlay
 import com.drdisagree.iconify.xposed.ModPack
-import com.drdisagree.iconify.xposed.utils.SystemUtil
+import com.drdisagree.iconify.xposed.utils.SystemUtils
 import com.drdisagree.iconify.xposed.utils.XPrefs.Xprefs
 import com.drdisagree.iconify.xposed.utils.XPrefs.XprefsIsInitialized
 import de.robv.android.xposed.XC_MethodHook
@@ -38,7 +38,7 @@ class QSLightThemeA12(context: Context?) : ModPack(context!!) {
     private val qsDualToneOverlay = "IconifyComponentQSDT.overlay"
 
     init {
-        isDark = SystemUtil.isDarkMode
+        isDark = SystemUtils.isDarkMode
     }
 
     override fun updatePrefs(vararg key: String) {
@@ -361,12 +361,15 @@ class QSLightThemeA12(context: Context?) : ModPack(context!!) {
     }
 
     private fun applyOverlays(force: Boolean) {
-        val isCurrentlyDark: Boolean = SystemUtil.isDarkMode
+        val isCurrentlyDark: Boolean = SystemUtils.isDarkMode
         if (isCurrentlyDark == isDark && !force) return
 
         isDark = isCurrentlyDark
 
-        disableOverlays(qsLightThemeOverlay, qsDualToneOverlay)
+        if (!lightQSHeaderEnabled) {
+            if (isCurrentlyDark) disableOverlay(qsLightThemeOverlay)
+            if (!dualToneQSEnabled) disableOverlay(qsDualToneOverlay)
+        }
 
         try {
             Thread.sleep(50)

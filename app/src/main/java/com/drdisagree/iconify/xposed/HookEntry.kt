@@ -13,7 +13,7 @@ import com.drdisagree.iconify.IRootProviderProxy
 import com.drdisagree.iconify.R
 import com.drdisagree.iconify.common.Const.FRAMEWORK_PACKAGE
 import com.drdisagree.iconify.xposed.utils.BootLoopProtector
-import com.drdisagree.iconify.xposed.utils.SystemUtil
+import com.drdisagree.iconify.xposed.utils.SystemUtils
 import com.drdisagree.iconify.xposed.utils.XPrefs
 import com.drdisagree.iconify.xposed.utils.XPrefs.Xprefs
 import de.robv.android.xposed.XC_MethodHook
@@ -22,6 +22,10 @@ import de.robv.android.xposed.XposedBridge.log
 import de.robv.android.xposed.XposedHelpers.findAndHookMethod
 import de.robv.android.xposed.XposedHelpers.findClass
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.util.LinkedList
 import java.util.Queue
 import java.util.concurrent.CompletableFuture
@@ -110,7 +114,7 @@ class HookEntry : ServiceConnection {
             return
         }
 
-        SystemUtil(mContext!!)
+        SystemUtils(mContext!!)
 
         loadModPacks(loadPackageParam)
     }
@@ -148,7 +152,7 @@ class HookEntry : ServiceConnection {
                 Xprefs.getBoolean("LoadTestBooleanValue", false)
                 break
             } catch (ignored: Throwable) {
-                SystemUtil.sleep(1000);
+                SystemUtils.sleep(1000);
             }
         }
 
@@ -158,19 +162,19 @@ class HookEntry : ServiceConnection {
     }
 
     private fun forceConnectRootService() {
-        Thread {
-            while (SystemUtil.UserManager == null || !SystemUtil.UserManager!!.isUserUnlocked) {
+        CoroutineScope(Dispatchers.IO).launch {
+            while (SystemUtils.UserManager == null || !SystemUtils.UserManager!!.isUserUnlocked) {
                 // device is still CE encrypted
-                SystemUtil.sleep(2000)
+                delay(2000)
             }
 
-            SystemUtil.sleep(5000) // wait for the unlocked account to settle down a bit
+            delay(5000) // wait for the unlocked account to settle down a bit
 
             while (rootProxyIPC == null) {
                 connectRootService()
-                SystemUtil.sleep(5000)
+                delay(5000)
             }
-        }.start()
+        }
     }
 
     private fun connectRootService() {

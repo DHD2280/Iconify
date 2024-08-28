@@ -131,6 +131,8 @@
     <string name="settings_restart_systemui_after_boot_desc">Some options like blur intensity doesn\'t take effect until systemui is restarted</string>
     <string name="settings_show_home_page_card_title">Show Home Page Card</string>
     <string name="settings_show_home_page_card_desc">Show a beautiful card on the home page.</string>
+    <string name="settings_vibrate_ui_card_title">Haptic Feedback</string>
+    <string name="settings_vibrate_ui_page_card_desc">Enhance touch feedback with interactive haptics.</string>
     <string name="settings_clear_app_cache_title">Clear App Cache</string>
     <string name="settings_clear_app_cache_desc">Clear caches generated due to the usage of custom fonts, images, or gifs.</string>
     <string name="activity_title_experimental">Experimental</string>
@@ -264,8 +266,8 @@
     <string name="section_title_misc">Misc.</string>
     <string name="minimal_qspanel">Minimal QS Panel</string>
     <string name="remove_top_shade_of_qspanel">Remove top shade of QS panel</string>
-    <string name="disable_monet_title">Disable System Monet</string>
-    <string name="disable_monet_desc">Helps to retain custom colors\nSystemUI restart required</string>
+    <string name="system_monet_title">System Monet</string>
+    <string name="system_monet_desc">Disable to retain custom colors\nSystemUI restart required</string>
 
     <!-- Basic Colors -->
     <string name="primary_color">Primary Color</string>
